@@ -45,6 +45,7 @@
   "devDependencies": {
     "@types/core-js": "^0.9.35",
     "@types/node": "^6.0.51",
+    "browser-sync": "^2.18.5",
     "browserify": "^13.1.1",
     "concat-stream": "^1.5.2",
     "factor-bundle": "^2.5.0",

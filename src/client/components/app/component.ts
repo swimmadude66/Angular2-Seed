@@ -6,8 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: [require('./styles.css')]
 })
 export class AppComponent {
-
-  title: string = 'Angular2 Seed';
-
   constructor() { }
 }

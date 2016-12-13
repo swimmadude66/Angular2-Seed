@@ -12,6 +12,7 @@ const concat 		= require('concat-stream');
 const file 			= require('gulp-file');
 const fs          	= require('fs');
 const path			= require('path');
+const browserSync 	= require('browser-sync').create();
 const client_tsc	= require('./src/client/tsconfig.json').compilerOptions;
 const ts_project	= ts.createProject('./src/server/tsconfig.json');
 
@@ -57,8 +58,14 @@ gulp.task('browserify', ['install'], function(){
 	return bundle(false);
 });
 
-gulp.task('watchify', ['install'], function(){
-	return bundle(true);
+gulp.task('watchify', ['install'], function(done){
+	bundle(true);
+	return done();
+});
+
+gulp.task('browser-sync', ['watchify'], function(done) {
+	browserSync.reload();
+    return done();
 });
 
 gulp.task('compile_node', ['install'], function(){
@@ -85,11 +92,16 @@ gulp.task('install', function(){
 gulp.task('copy', ['copy_client_root', 'copy_bootstrap']);
 
 gulp.task('watch', function(){
-  console.log('watching for changes...');
-  gulp.watch(['src/client/**/*.html'], ['copy_client_root']);
-  gulp.watch(['./package.json'], ['install']);
-  gulp.watch(['./src/server/**/*.ts'], ['compile_node']);
-	return bundle(true);
+  	console.log('watching for changes...');
+  	browserSync.init({
+        proxy: 'localhost:3000',
+		port: '3001'
+	});
+	gulp.watch(['src/client/**/*.html'], ['copy_client_root']);
+  	gulp.watch(['./package.json'], ['install']);
+  	gulp.watch(['./src/server/**/*.ts'], ['compile_node']);
+  	gulp.watch(['./src/client/**/*'], ['browser-sync']);
+  	return;
 });
 
 // Default Task
