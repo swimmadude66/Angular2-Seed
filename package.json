@@ -1,7 +1,7 @@
 {
   "name": "angular2-seed",
   "version": "0.0.1",
-  "description": "Full featured starter project for ng2",
+  "description": "Full-featured starter project for ng2",
   "main": "dist/server/app.js",
   "scripts": {
     "test": "mocha",
