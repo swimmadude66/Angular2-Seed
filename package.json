@@ -5,10 +5,11 @@
   "main": "dist/server/app.js",
   "scripts": {
     "test": "mocha",
-    "tsc-client": "node_modules/.bin/tsc -p src/client/tsconfig.json",
-    "tsc-server": "node_modules/.bin/tsc -p src/server/tsconfig.json",
-    "gulp": "node_modules/.bin/gulp",
-    "start": "node dist/server/app.js"
+    "tsc-client": "tsc -p src/client/tsconfig.json",
+    "tsc-server": "tsc -p src/server/tsconfig.json",
+    "gulp": "gulp",
+    "start": "node dist/server/app.js",
+    "dev": "gulp watch"
   },
   "repository": {
     "type": "git",
@@ -43,7 +44,7 @@
     "morgan": "^1.7.0",
     "reflect-metadata": "^0.1.8",
     "request": "^2.76.0",
-    "rxjs": "^5.0.1",
+    "rxjs": "^5.0.3",
     "tether": "^1.4.0",
     "uuid": "^3.0.1",
     "zone.js": "^0.7.2"
@@ -51,24 +52,19 @@
   "devDependencies": {
     "@types/core-js": "^0.9.35",
     "@types/node": "^6.0.51",
-    "browser-sync": "^2.18.5",
-    "browserify": "^13.1.1",
-    "concat-stream": "^1.5.2",
-    "factor-bundle": "^2.5.0",
+    "angular-router-loader": "^0.5.0",
+    "angular2-template-loader": "^0.6.2",
+    "awesome-typescript-loader": "^3.0.4-rc.0",
+    "browser-sync": "^2.18.7",
+    "browser-sync-webpack-plugin": "^1.1.4",
     "gulp": "^3.9.1",
-    "gulp-file": "^0.3.0",
-    "gulp-install": "^0.6.0",
-    "gulp-typescript": "^3.1.3",
-    "gulp-uglify": "^1.5.4",
-    "mocha": "^2.4.5",
-    "loaderify": "^0.1.0",
-    "minify": "^2.0.13",
+    "gulp-typescript": "^3.1.4",
     "node-sass": "^4.2.0",
-    "tsify": "^1.0.9",
+    "raw-loader": "^0.5.1",
+    "sass-loader": "^5.0.1",
+    "source-map-loader": "^0.1.6",
     "tslint": "^3.7.4",
-    "typescript": "^2.1.4",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.7.0"
+    "typescript": "^2.1.6",
+    "webpack": "^2.2.1"
   }
 }
