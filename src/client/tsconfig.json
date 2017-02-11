@@ -8,7 +8,11 @@
     "experimentalDecorators": true,
     "removeComments": true,
     "noImplicitAny": false,
-    "outDir": "../../build"
+    "outDir": "../../build/client",
+    "typeRoots": [
+      "../../node_modules/@types"
+    ]
   },
   "compileOnSave": false
 }
+

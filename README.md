@@ -8,7 +8,7 @@ _Sturdy starting point with my favorite tech stack_
 - dotenv
 - Typescript
 - Gulp for task running
-- Browserify for bundling
+- Webpack for bundling
 - BrowserSync for auto reloads  
 - Npm for package dependency
 - Bootstrap 4 for css framework
@@ -25,12 +25,16 @@ components. Since you can nest the folders to represent the navigation of your a
 files associated with a given view. Less important, but still nice, is that we can easily use non-css and non-html files for __some__ components. Great if you are evaluating 
 a new technology like sass or less, and are not ready for a full app rewrite yet.
 
-To do the injection, this project uses a Browserify transform called loaderify, which I wrote for another project. loaderify treats browserify require chains like webpack would, 
-allowing you to specify functions to be performed against required files matching certain patterns. By default, this project injects all css and html, and compiles and inserts all scss. 
-
 
 ##Get started
 To get started, run `npm i && npm run gulp`. When the build completes, run `npm start` and load up `localhost:3000` to see the sample app!
+
+OR
+
+to take advantage of live-reloads while making changes:
+
+In one terminal, type: `npm run gulp -- compile_node` then `npm start`. This compiles and starts the server on port 3000 (by default)
+In another terminal, type `npm run dev`. This will compile the client, and initialize browserSync auto-reload.
 
 ###BrowserSync
 If you run `npm gulp -- watch` (mind the spaces) it will launch watchify with browserSync. Run `npm start` in another terminal, then refresh the browser window that opened up. 

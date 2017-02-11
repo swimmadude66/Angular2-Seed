@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-seed',
-  template: require('./template.html'),
-  styleUrls: [require('./styles.scss')]
+  templateUrl: './template.html'
 })
 export class AppComponent {
   constructor() { }
