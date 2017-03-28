@@ -1,8 +1,8 @@
 import {join} from 'path';
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const express = require('express');
-const morgan = require('morgan');
+import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
+import * as express from 'express';
+import * as morgan from 'morgan';
 
 require('dotenv').config();
 

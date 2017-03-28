@@ -43,9 +43,6 @@ module.exports = {
                     },
                     {
                         loader: 'angular2-template-loader'
-                        // options: {
-                        //     keepUrl: true
-                        // }
                     },
                 ]
             },
