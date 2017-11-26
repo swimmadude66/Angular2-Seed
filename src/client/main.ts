@@ -1,5 +1,10 @@
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './modules/app.module';
+import {enableProdMode} from '@angular/core';
+import {AppModule} from './modules/app';
 
-const platform = platformBrowserDynamic();
-platform.bootstrapModule(AppModule);
+let opts: any = {};
+if (process.env.PROD_MODE) {
+    enableProdMode();
+    opts.preserveWhitespaces = false;
+}
+platformBrowserDynamic().bootstrapModule(AppModule, opts);

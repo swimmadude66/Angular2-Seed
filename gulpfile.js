@@ -1,11 +1,15 @@
-const gulp        	= require('gulp');
-const fs          	= require('fs');
-const path			= require('path');
-const sass          = require('node-sass');
-const webpack       = require('webpack');
-const webpackConfig = require('./webpack.config');
-const browserSync   = require('browser-sync-webpack-plugin');
-const ts_project	= require('gulp-typescript').createProject('./src/server/tsconfig.json');
+var fs          	= require('fs');
+var path			= require('path');
+var span            = require('child_process').spawn;
+var gulp        	= require('gulp');
+var sass            = require('node-sass');
+var webpack         = require('webpack');
+var AotPlugin       = require('@ngtools/webpack').AngularCompilerPlugin;
+var webpackConfig   = require('./webpack.config');
+var browserSync     = require('browser-sync-webpack-plugin');
+var ts_project	    = require('gulp-typescript').createProject('./src/server/tsconfig.json');
+
+var server_proc;
 
 function sassNodeModulesImporter(url, file, done){
     // if it starts with a tilde, search in node_modules;
@@ -24,7 +28,7 @@ gulp.task('compile_node', function(){
 });
 
 gulp.task('copy_client_root', ['copy_client_assets'], function(done){
-    gulp.src('src/client/index.html')
+    gulp.src(['src/client/index.html', 'src/client/favicon.ico'])
     .pipe(gulp.dest('dist/client/'));
 
     sass.render({
@@ -50,46 +54,104 @@ gulp.task('copy_fonts', ['copy_client_assets'], function(){
       .pipe(gulp.dest('dist/client/fonts'));
 });
 
+gulp.task('start-server', ['compile_node'], function(){
+    if (server_proc) {
+        server_proc.kill();
+        server_proc = undefined;
+    }
+    server_proc = span('node', ['dist/server/app.js'], {
+        cwd: __dirname,
+        stdio: [0, 1, 2, 'ipc']
+    });
+});
+
 gulp.task('webpack', function(done) {
-    let config = webpackConfig;
+    var config = webpackConfig;
+    config.module.rules.push({
+        test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
+        loader: '@ngtools/webpack'
+    });
+    
     config.plugins.push(
-        new webpack.optimize.UglifyJsPlugin()
+        new webpack.optimize.UglifyJsPlugin({
+            parallel: true,
+            sourceMap: true 
+        }),
+        new AotPlugin({
+            tsConfigPath: path.join(__dirname, './src/client/tsconfig.json'),
+            mainPath: path.join(__dirname, './src/client/main.ts'),
+            typeChecking: false,
+        })
     );
-    return webpack(config, function(err){
+    return webpack(config, function(err, stats){
         if (err) {
-            console.log(err);
+            console.error(err);
+        }
+        if (stats.hasErrors) {
+            if (stats.compilation.errors) {
+                stats.compilation.errors.forEach(function(e){console.error(e,'\n');});
+            } else {
+                console.log(stats);
+            }
         }
         return done(err);
     });
 });
 
 gulp.task('webpack-watch', function() {
-    let config = webpackConfig;
+    var config = webpackConfig;
     config.watch = true;
     config.cache = true;
     config.bail = false;
+    config.stats = 'errors-only';
+    config.module.rules.push(
+        {
+            enforce: 'pre',
+            test: /\.ts$/,
+            use: 'source-map-loader'
+        },
+        {
+            test: /\.ts$/,
+            use: [
+                {
+                    loader: 'awesome-typescript-loader',
+                    options: {
+                        configFileName: './src/client/tsconfig.json'
+                    }
+                },
+                {
+                    loader: 'angular-router-loader'
+                },
+                {
+                    loader: 'angular2-template-loader'
+                },
+            ]
+        }
+    );
     config.plugins.push(
         new browserSync({
             host: 'localhost',
             port: 3001,
-            proxy: 'localhost:3000'
+            proxy: 'localhost:3000',
+            ws: true,
+            open: !(process.env.DOCKER_MODE)
         })
     );
     webpack(config, function(err, stats) {
         if (err) {
-            console.log(err);
+            console.error(err);
         }
     });
 });
 
 gulp.task('copy', ['copy_client_root', 'copy_client_assets', 'copy_fonts']);
 
-gulp.task('watch', ['copy', 'compile_node', 'webpack-watch'], function(){
+gulp.task('watch', ['copy', 'start-server', 'webpack-watch'], function(){
   	console.log('watching for changes...');
 	gulp.watch(['src/client/assets/**/*'], ['copy_client_assets']);
 	gulp.watch(['src/client/index.html', 'src/client/styles.scss', 'src/client/scss/*.scss'], ['copy_client_root']);
 	gulp.watch(['node_modules/font-awesome/fonts/*', 'src/client/fonts/*'], ['copy_fonts']);
-	gulp.watch(['src/server/**/*.ts'], ['compile_node']);
+	gulp.watch(['src/server/**/*.ts'], ['start-server']);
 });
 
 // Default Task

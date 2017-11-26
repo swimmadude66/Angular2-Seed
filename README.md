@@ -29,13 +29,8 @@ a new technology like sass or less, and are not ready for a full app rewrite yet
 ##Get started
 To get started, run `npm i && npm run gulp`. When the build completes, run `npm start` and load up `localhost:3000` to see the sample app!
 
-OR
+**OR**
 
 to take advantage of live-reloads while making changes:
 
-In one terminal, type: `npm run gulp -- compile_node` then `npm start`. This compiles and starts the server on port 3000 (by default)
-In another terminal, type `npm run dev`. This will compile the client, and initialize browserSync auto-reload.
-
-###BrowserSync
-If you run `npm gulp -- watch` (mind the spaces) it will launch watchify with browserSync. Run `npm start` in another terminal, then refresh the browser window that opened up. 
-You will have an auto-reloading browser session which re-compiles on file changes!
+Type: `npm run dev` This compiles and starts the server on port 3000 (by default), compiles the client, and initializes browserSync auto-reload.

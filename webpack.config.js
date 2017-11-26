@@ -3,52 +3,21 @@ var webpack = require('webpack');
 var commonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 var providePlugin = webpack.ProvidePlugin;
 
-module.exports = {
+var commonConfig = {
     entry: {
-        'app': './src/client/main.ts',
-        'vendor': './src/client/vendor.ts',
-        
+        'app': path.join(__dirname,'./src/client/main.ts'),
+        'vendor': path.join(__dirname,'./src/client/vendor.ts'),
     },
     output: {
         filename: '[name].min.js',
-        path: path.resolve(__dirname, 'dist/client')
+        path: path.join(__dirname, 'dist/client')
     },
     resolve: {
         extensions: ['.ts', '.js', '.json']
     },
-    devtool: 'source-map',
+    devtool: 'sourcemap',
     module: {
         rules: [
-            {
-                enforce: 'pre',
-                test: /\.js$/,
-                loader: 'source-map-loader'
-            },
-            {
-                enforce: 'pre',
-                test: /\.ts$/,
-                use: 'source-map-loader'
-            },
-            {
-                test: /\.ts$/,
-                use: [
-                    {
-                        loader: 'awesome-typescript-loader',
-                        options: {
-                            configFileName: './src/client/tsconfig.json'
-                        }
-                    },
-                    {
-                        loader: 'angular-router-loader'
-                    },
-                    {
-                        loader: 'angular2-template-loader'
-                        // options: {
-                        //     keepUrl: true
-                        // }
-                    },
-                ]
-            },
             {
                 test: /\.scss$/,
                 exclude: /node_modules/,
@@ -82,7 +51,10 @@ module.exports = {
         }),
         new commonsChunkPlugin({
             name: 'common',
-            minChunks: 2
+            minChunks: 2,
+            chunks: ['app', 'vendor']
         })
     ]
 };
+
+module.exports = commonConfig;

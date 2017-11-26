@@ -1,7 +1,7 @@
 import {RouterModule} from '@angular/router';
 import {NgModule} from '@angular/core';
-import {SharedModule} from './shared.module';
-import {DemoComponent} from '../components';
+import {SharedModule} from './';
+import {DemoComponent} from '../components/demo/component';
 
 @NgModule({
     imports: [
