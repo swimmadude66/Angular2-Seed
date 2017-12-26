@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var AotPlugin = require('@ngtools/webpack').AngularCompilerPlugin;
 var commonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 var providePlugin = webpack.ProvidePlugin;
 
@@ -15,9 +16,12 @@ var commonConfig = {
     resolve: {
         extensions: ['.ts', '.js', '.json']
     },
-    devtool: 'sourcemap',
     module: {
         rules: [
+            {
+                test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
+                loader: '@ngtools/webpack'
+            },
             {
                 test: /\.scss$/,
                 exclude: /node_modules/,
@@ -40,6 +44,11 @@ var commonConfig = {
         ]
     },
     plugins: [
+        new AotPlugin({
+            tsConfigPath: path.join(__dirname, './src/client/tsconfig.json'),
+            mainPath: path.join(__dirname, './src/client/main.ts'),
+            typeChecking: false,
+        }),
         new providePlugin({
             $: 'jquery',
             jQuery: 'jquery',

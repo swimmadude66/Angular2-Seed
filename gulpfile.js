@@ -4,7 +4,6 @@ var span            = require('child_process').spawn;
 var gulp        	= require('gulp');
 var sass            = require('node-sass');
 var webpack         = require('webpack');
-var AotPlugin       = require('@ngtools/webpack').AngularCompilerPlugin;
 var webpackConfig   = require('./webpack.config');
 var browserSync     = require('browser-sync-webpack-plugin');
 var ts_project	    = require('gulp-typescript').createProject('./src/server/tsconfig.json');
@@ -67,20 +66,10 @@ gulp.task('start-server', ['compile_node'], function(){
 
 gulp.task('webpack', function(done) {
     var config = webpackConfig;
-    config.module.rules.push({
-        test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-        loader: '@ngtools/webpack'
-    });
-    
     config.plugins.push(
         new webpack.optimize.UglifyJsPlugin({
             parallel: true,
             sourceMap: true 
-        }),
-        new AotPlugin({
-            tsConfigPath: path.join(__dirname, './src/client/tsconfig.json'),
-            mainPath: path.join(__dirname, './src/client/main.ts'),
-            typeChecking: false,
         })
     );
     return webpack(config, function(err, stats){
@@ -104,28 +93,12 @@ gulp.task('webpack-watch', function() {
     config.cache = true;
     config.bail = false;
     config.stats = 'errors-only';
+    config.devtool = 'sourcemap';
     config.module.rules.push(
         {
             enforce: 'pre',
             test: /\.ts$/,
             use: 'source-map-loader'
-        },
-        {
-            test: /\.ts$/,
-            use: [
-                {
-                    loader: 'awesome-typescript-loader',
-                    options: {
-                        configFileName: './src/client/tsconfig.json'
-                    }
-                },
-                {
-                    loader: 'angular-router-loader'
-                },
-                {
-                    loader: 'angular2-template-loader'
-                },
-            ]
         }
     );
     config.plugins.push(
