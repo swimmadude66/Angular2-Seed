@@ -76,7 +76,7 @@ gulp.task('webpack', function(done) {
         if (err) {
             console.error(err);
         }
-        if (stats.hasErrors) {
+        if (stats.hasErrors()) {
             if (stats.compilation.errors) {
                 stats.compilation.errors.forEach(function(e){console.error(e,'\n');});
             } else {
@@ -113,6 +113,13 @@ gulp.task('webpack-watch', function() {
     webpack(config, function(err, stats) {
         if (err) {
             console.error(err);
+        }
+        if (stats.hasErrors()) {
+            if (stats.compilation.errors) {
+                stats.compilation.errors.forEach(function(e){console.error(e,'\n');});
+            } else {
+                console.log(stats);
+            }
         }
     });
 });
